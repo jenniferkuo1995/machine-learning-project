@@ -116,7 +116,7 @@ confusionMatrix(rf_prediction, testing$classe)
 #P-Value [Acc > NIR] : < 2.2e-16    
 ```
 
-Though it is not shown here, I ran the train function of the caret package using method = 'rf' for comparison. This produced the results shown below. As you can see, this method produces a lower accuracy (of 99.51%) and much longer runtime (with an elapsed time of 4631.342). As such, the model I chose was both faster and more accurate. 
+To get a relative picture of how well my model worked, I ran the train function of the caret package using method = 'rf' for comparison. This produced the results shown below. Compared to my model, this method produces a lower accuracy (of 99.51%) and much longer runtime (elapsed time of 4631.342). As such, the model I chose was both faster and more accurate. 
 
 ```r
 start <- proc.time()
