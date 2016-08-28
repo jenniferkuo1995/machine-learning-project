@@ -1,2 +1,7 @@
 # machine-learning-project
-final project for Coursera Practical Machine Learning
+
+<br>
+
+```r
+library(caret)
+```
