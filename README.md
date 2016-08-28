@@ -2,7 +2,7 @@
 
 Data
 ---------
-This project uses:
+This project uses data from accelerometers ont he belt, forearm, arm, and dumbell of 6 particpants. In particular, 
 * training data available at: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
 * test data available at: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
 
@@ -10,7 +10,7 @@ This project uses:
 
 Aim
 ----------
-This project aims to predict the "classe" variable in the training set. To do so, I will:
+The 6 participants of the data above were asked to perform barbell lifts correctly and incorrectly in 5 different ways. This project aims to predict, based on accelerometer information, their manner of excercise out of these 5 ways. This is the "classe" variable in the training set. To do so, I will:
 * Process the test Data
 * Split the Data Using Cross Validation
 * Build a Prediction Model
@@ -32,17 +32,26 @@ data <- read.csv("~/Documents/machine-learning-project/pml-training.csv", #impor
 Next, a look at the missing values shows that there are a large number of columns containing a majority of missing values. 
 ```r
 table(sapply(data, function(x) {sum(is.na(x))}))
+# Number of NAs  0 19216 19217 19218 19220 19221 19225 19226 19227 19248 19293 19294 19296 19299 19300 19301 19622 
+# Freq          60    67     1     1     1     4     1     4     2     2     1     1     2     1     4     2     6 
+
 ```
 
-As such, I created a new data frame, new_data, where the columns containing missing values have been removed. As seen from the table function, we are left with 60 columns that have 0 NA values. 
+As such, I decided to clean the data by removing columns with mostly missing values. The resulting new_data only has columns that contain no missing values. As seen from the table function, we are left with 60 columns that have 0 NA values. 
 
 ```r
 new_data <- data[ , colSums(is.na(data)) == 0]
 table(sapply(new_data, function(x) {sum(is.na(x))}))
+#NA Values 0 
+#Freq     60 
 ```
-A look at the names of new_data show that the first 7 columns are not sensor readings. As such, these are removed.
+A look at the names of new_data show that the first 7 columns are not sensor readings. These columns won't be useful for predicting classe, so I removed them.
+
 ```r
 names(new_data)[1:10]
+ #[1] "X"                    "user_name"            "raw_timestamp_part_1" "raw_timestamp_part_2" "cvtd_timestamp"      
+ #[6] "new_window"           "num_window"           "roll_belt"            "pitch_belt"           "yaw_belt"   
+
 new_data <- new_data[,8:length(new_data)]
 ```
 <br>
@@ -76,6 +85,7 @@ time <- proc.time() - start
 Evaluating the Model
 --------------------
 Looking at the variable 'time', we find that the elapsed time was 45.200,which is relatively short.
+
 ```r
 time
    user  system elapsed 
@@ -126,13 +136,13 @@ time #find the runtime
 #    user   system  elapsed 
 #4437.967   57.750 4631.342 
 ```
+
 Predicting on 20 Test Cases
 --------------------------
+Finally, to further evaluate my model, I tested it on a separate test set with 20 cases I first imported the test set into pml.test, then ran the predict function using my model. The resulting prediction was correct 20/20 times, supporting the accuracy of the model.
+
 ```r
 pml.test <- read.csv("~/Documents/machine-learning-project/pml-testing.csv",
             na.strings = c("#DIV/0!","NA", ""))
 pml.predict <- predict(rfFit, pml.test)
-
-#1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
-#B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
 ```
